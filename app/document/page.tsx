@@ -4,7 +4,7 @@ import DashBoard from "./_components/DashBoard";
 const DocumentPage = () => {
   return (
     <div>
-      <DashBoard />{" "}
+      <DashBoard /> <h1>dnlis</h1>
     </div>
   );
 };

@@ -9,7 +9,6 @@ const DashBoard = () => {
   if (!userId) {
     return <IntroPage />;
   }
-  console.log(auth);
   return (
     <div>
       hi
