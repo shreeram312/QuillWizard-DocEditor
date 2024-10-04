@@ -20,6 +20,7 @@ import Editor from "@/components/ui/Editor";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 import { useToast } from "@/hooks/use-toast";
+import DrawerAi from "./DrawerAi";
 
 const FormSchema = z.object({
   title: z.string().min(2).max(50),
@@ -30,7 +31,7 @@ interface DocumentProps {
   id: string;
   userId: string;
   title: string | null;
-  description: string | null;
+  description: string | "";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,16 +60,41 @@ const EditorBlock: React.FC<EditorBlockProps> = ({ document }) => {
         title: "Document Successfully Updated",
         variant: "default",
       });
-      //   revalidatePath("/");
-      //   revalidatePath("/api/document/" + document?.id);
+      revalidatePath("/");
+      revalidatePath("/api/document/" + document?.id);
     } catch (e) {
       console.log(e);
     }
   };
+
+  async function onDocumentDelete() {
+    try {
+      await axios.delete(`/api/document/${document?.id}`);
+      toast({
+        title: "Document Deleted Succesfully",
+        variant: "destructive",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
-    <div>
+    <div className="px-4">
+      <div className="flex  float-right my-2 space-x-4">
+        <DrawerAi description={document.description} />
+
+        <form onSubmit={onDocumentDelete} className="flex  float-right m-2">
+          <Button type="submit" variant="destructive">
+            {" "}
+            Delete
+          </Button>
+        </form>
+      </div>
       <Form {...EditorForm}>
-        <form onSubmit={EditorForm.handleSubmit(onUpdateChange)}>
+        <form
+          onSubmit={EditorForm.handleSubmit(onUpdateChange)}
+          className="space-y-8"
+        >
           <FormField
             control={EditorForm.control}
             name="title"
